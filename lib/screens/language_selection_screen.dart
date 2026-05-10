@@ -22,22 +22,22 @@ class LanguageSelectionScreen extends StatelessWidget {
       appBar: AppBar(title: Text(localizations.languageSelectionTitle)),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(AppSpacing.screenPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 localizations.languageSelectionDescription,
-                style: const TextStyle(color: Colors.white70),
+                style: AppTextStyles.body,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.lg),
               _LanguageTile(
                 label: localizations.korean,
                 locale: const Locale('ko'),
                 isSelected: selectedLanguageCode == 'ko',
                 onSelected: localeController.setLocale,
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.sm),
               _LanguageTile(
                 label: localizations.english,
                 locale: const Locale('en'),
@@ -69,14 +69,14 @@ class _LanguageTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadii.md),
         side: BorderSide(
-          color: isSelected ? AppConstants.accentColor : Colors.white24,
+          color: isSelected ? AppColors.cyanAccent : AppColors.surfaceLight,
         ),
       ),
       title: Text(label),
       trailing: isSelected
-          ? const Icon(Icons.check_circle, color: AppConstants.accentColor)
+          ? const Icon(Icons.check_circle, color: AppColors.cyanAccent)
           : null,
       onTap: () => onSelected(locale),
     );

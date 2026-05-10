@@ -42,14 +42,7 @@ class EyeLockChallengeApp extends StatelessWidget {
             return const Locale('en');
           },
           debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: AppConstants.accentColor,
-              brightness: Brightness.dark,
-            ),
-            scaffoldBackgroundColor: AppConstants.backgroundColor,
-            useMaterial3: true,
-          ),
+          theme: AppTheme.darkTheme,
           initialRoute: SplashScreen.routeName,
           onGenerateRoute: (settings) {
             return MaterialPageRoute<void>(

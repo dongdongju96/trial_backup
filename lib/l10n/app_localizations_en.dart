@@ -12,7 +12,32 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'Eye Lock Challenge';
 
   @override
+  String get appSubtitle => 'Gaze Focus Challenge';
+
+  @override
+  String get keepEyesLocked => 'Keep your eyes locked on the target.';
+
+  @override
+  String get chooseChallenge => 'Choose a challenge mode';
+
+  @override
+  String get focusChallengeDescription =>
+      'Keep your gaze locked on the highlighted eye area as long as you can.';
+
+  @override
   String get splashTagline => 'Focus. Hold. Beat your time.';
+
+  @override
+  String get modeSelectionHeroTitleTop => 'EYE LOCK';
+
+  @override
+  String get modeSelectionHeroTitleBottom => 'CHALLENGE';
+
+  @override
+  String get modeSelectionSubtitle => 'Gaze Focus Challenge';
+
+  @override
+  String get modeSelectionRule => 'Keep your eyes locked on the target.';
 
   @override
   String get chooseChallengeMode => 'Choose a challenge mode';
@@ -28,7 +53,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get femaleMode => 'Female Mode';
 
   @override
+  String get challengeRulesTitle => 'Challenge Rules';
+
+  @override
+  String get challengeRuleLookAtEyes => 'Look at the target eye area.';
+
+  @override
+  String get challengeRuleKeepFocus => 'Keep your focus steady.';
+
+  @override
+  String get challengeRuleLookAwayGameOver => 'Looking away ends the game.';
+
+  @override
   String get language => 'Language';
+
+  @override
+  String get settings => 'Settings';
+
+  @override
+  String get help => 'Help';
 
   @override
   String get languageSelectionTitle => 'Language';
@@ -44,11 +87,41 @@ class AppLocalizationsEn extends AppLocalizations {
   String get korean => 'Korean';
 
   @override
-  String get cameraPermissionTitle => 'Camera permission';
+  String get cameraPermissionTitle => 'Camera Permission Required';
 
   @override
   String get cameraPermissionDescription =>
-      'This app uses the front camera only to estimate your gaze during the game. Camera images are not saved, recorded, or uploaded. All processing happens on your device.';
+      'This app uses the front camera only to estimate your gaze during the game. Camera images are not saved or uploaded.';
+
+  @override
+  String get onDeviceProcessing => 'On-device processing';
+
+  @override
+  String get noRecording => 'No recording';
+
+  @override
+  String get noUpload => 'No upload';
+
+  @override
+  String get noFaceIdentification => 'No face identification';
+
+  @override
+  String get trustChecklistTitle => 'Privacy promise';
+
+  @override
+  String get trustOnDeviceProcessing => 'On-device processing';
+
+  @override
+  String get trustNoRecording => 'No recording';
+
+  @override
+  String get trustNoUpload => 'No upload';
+
+  @override
+  String get trustNoFaceIdentification => 'No face identification';
+
+  @override
+  String get later => 'Later';
 
   @override
   String get privacyNotice =>
@@ -81,8 +154,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get countdownInstruction => 'Focus on the highlighted eye area.';
 
   @override
+  String get countdownLock => 'LOCK';
+
+  @override
   String get mockTrackingActive =>
       'Mock gaze tracking is active. The full camera pipeline comes next.';
+
+  @override
+  String get keepLookingAtEyes => 'Keep your eyes locked...';
+
+  @override
+  String get gameplayInstruction => 'Keep your eyes locked...';
+
+  @override
+  String get focusStability => 'Focus Stability';
+
+  @override
+  String get focusLocked => 'Locked';
+
+  @override
+  String get lockText => 'LOCK';
 
   @override
   String get gazeMovedAway => 'Gaze moved away.';
@@ -107,10 +198,40 @@ class AppLocalizationsEn extends AppLocalizations {
       'Eyes not detected clearly. Move closer or improve lighting.';
 
   @override
-  String get gameOver => 'Game Over';
+  String get gameOver => 'GAME OVER';
+
+  @override
+  String get eyeContactDuration => 'You kept eye contact for:';
 
   @override
   String get resultDurationIntro => 'You kept eye contact for:';
+
+  @override
+  String get focusRank => 'Focus Rank';
+
+  @override
+  String get rankDistracted => 'Distracted';
+
+  @override
+  String get rankRookieFocus => 'Rookie Focus';
+
+  @override
+  String get rankSteadyEyes => 'Steady Eyes';
+
+  @override
+  String get rankSteelEyes => 'Steel Eyes';
+
+  @override
+  String get rankEyeLockMaster => 'Eye Lock Master';
+
+  @override
+  String get newRecord => 'NEW RECORD!';
+
+  @override
+  String get shareResult => 'Share Result';
+
+  @override
+  String get shareResultTodo => 'Share Result';
 
   @override
   String resultDurationSeconds(String seconds) {

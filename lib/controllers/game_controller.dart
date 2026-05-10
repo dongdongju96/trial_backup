@@ -25,7 +25,7 @@ class GameController extends ChangeNotifier {
   }
 
   final GameMode mode;
-  final ImageConfig imageConfig;
+  final GameImageConfig imageConfig;
   final GameTimerService timerService;
   final CameraService cameraService;
   final FaceLandmarkerService faceLandmarkerService;

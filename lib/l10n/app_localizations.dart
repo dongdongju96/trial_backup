@@ -104,11 +104,59 @@ abstract class AppLocalizations {
   /// **'Eye Lock Challenge'**
   String get appTitle;
 
+  /// No description provided for @appSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Gaze Focus Challenge'**
+  String get appSubtitle;
+
+  /// No description provided for @keepEyesLocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep your eyes locked on the target.'**
+  String get keepEyesLocked;
+
+  /// No description provided for @chooseChallenge.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a challenge mode'**
+  String get chooseChallenge;
+
+  /// No description provided for @focusChallengeDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep your gaze locked on the highlighted eye area as long as you can.'**
+  String get focusChallengeDescription;
+
   /// No description provided for @splashTagline.
   ///
   /// In en, this message translates to:
   /// **'Focus. Hold. Beat your time.'**
   String get splashTagline;
+
+  /// No description provided for @modeSelectionHeroTitleTop.
+  ///
+  /// In en, this message translates to:
+  /// **'EYE LOCK'**
+  String get modeSelectionHeroTitleTop;
+
+  /// No description provided for @modeSelectionHeroTitleBottom.
+  ///
+  /// In en, this message translates to:
+  /// **'CHALLENGE'**
+  String get modeSelectionHeroTitleBottom;
+
+  /// No description provided for @modeSelectionSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Gaze Focus Challenge'**
+  String get modeSelectionSubtitle;
+
+  /// No description provided for @modeSelectionRule.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep your eyes locked on the target.'**
+  String get modeSelectionRule;
 
   /// No description provided for @chooseChallengeMode.
   ///
@@ -134,11 +182,47 @@ abstract class AppLocalizations {
   /// **'Female Mode'**
   String get femaleMode;
 
+  /// No description provided for @challengeRulesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Challenge Rules'**
+  String get challengeRulesTitle;
+
+  /// No description provided for @challengeRuleLookAtEyes.
+  ///
+  /// In en, this message translates to:
+  /// **'Look at the target eye area.'**
+  String get challengeRuleLookAtEyes;
+
+  /// No description provided for @challengeRuleKeepFocus.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep your focus steady.'**
+  String get challengeRuleKeepFocus;
+
+  /// No description provided for @challengeRuleLookAwayGameOver.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking away ends the game.'**
+  String get challengeRuleLookAwayGameOver;
+
   /// No description provided for @language.
   ///
   /// In en, this message translates to:
   /// **'Language'**
   String get language;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
+  /// No description provided for @help.
+  ///
+  /// In en, this message translates to:
+  /// **'Help'**
+  String get help;
 
   /// No description provided for @languageSelectionTitle.
   ///
@@ -167,14 +251,74 @@ abstract class AppLocalizations {
   /// No description provided for @cameraPermissionTitle.
   ///
   /// In en, this message translates to:
-  /// **'Camera permission'**
+  /// **'Camera Permission Required'**
   String get cameraPermissionTitle;
 
   /// No description provided for @cameraPermissionDescription.
   ///
   /// In en, this message translates to:
-  /// **'This app uses the front camera only to estimate your gaze during the game. Camera images are not saved, recorded, or uploaded. All processing happens on your device.'**
+  /// **'This app uses the front camera only to estimate your gaze during the game. Camera images are not saved or uploaded.'**
   String get cameraPermissionDescription;
+
+  /// No description provided for @onDeviceProcessing.
+  ///
+  /// In en, this message translates to:
+  /// **'On-device processing'**
+  String get onDeviceProcessing;
+
+  /// No description provided for @noRecording.
+  ///
+  /// In en, this message translates to:
+  /// **'No recording'**
+  String get noRecording;
+
+  /// No description provided for @noUpload.
+  ///
+  /// In en, this message translates to:
+  /// **'No upload'**
+  String get noUpload;
+
+  /// No description provided for @noFaceIdentification.
+  ///
+  /// In en, this message translates to:
+  /// **'No face identification'**
+  String get noFaceIdentification;
+
+  /// No description provided for @trustChecklistTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy promise'**
+  String get trustChecklistTitle;
+
+  /// No description provided for @trustOnDeviceProcessing.
+  ///
+  /// In en, this message translates to:
+  /// **'On-device processing'**
+  String get trustOnDeviceProcessing;
+
+  /// No description provided for @trustNoRecording.
+  ///
+  /// In en, this message translates to:
+  /// **'No recording'**
+  String get trustNoRecording;
+
+  /// No description provided for @trustNoUpload.
+  ///
+  /// In en, this message translates to:
+  /// **'No upload'**
+  String get trustNoUpload;
+
+  /// No description provided for @trustNoFaceIdentification.
+  ///
+  /// In en, this message translates to:
+  /// **'No face identification'**
+  String get trustNoFaceIdentification;
+
+  /// No description provided for @later.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get later;
 
   /// No description provided for @privacyNotice.
   ///
@@ -230,11 +374,47 @@ abstract class AppLocalizations {
   /// **'Focus on the highlighted eye area.'**
   String get countdownInstruction;
 
+  /// No description provided for @countdownLock.
+  ///
+  /// In en, this message translates to:
+  /// **'LOCK'**
+  String get countdownLock;
+
   /// No description provided for @mockTrackingActive.
   ///
   /// In en, this message translates to:
   /// **'Mock gaze tracking is active. The full camera pipeline comes next.'**
   String get mockTrackingActive;
+
+  /// No description provided for @keepLookingAtEyes.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep your eyes locked...'**
+  String get keepLookingAtEyes;
+
+  /// No description provided for @gameplayInstruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep your eyes locked...'**
+  String get gameplayInstruction;
+
+  /// No description provided for @focusStability.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus Stability'**
+  String get focusStability;
+
+  /// No description provided for @focusLocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Locked'**
+  String get focusLocked;
+
+  /// No description provided for @lockText.
+  ///
+  /// In en, this message translates to:
+  /// **'LOCK'**
+  String get lockText;
 
   /// No description provided for @gazeMovedAway.
   ///
@@ -275,14 +455,74 @@ abstract class AppLocalizations {
   /// No description provided for @gameOver.
   ///
   /// In en, this message translates to:
-  /// **'Game Over'**
+  /// **'GAME OVER'**
   String get gameOver;
+
+  /// No description provided for @eyeContactDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'You kept eye contact for:'**
+  String get eyeContactDuration;
 
   /// No description provided for @resultDurationIntro.
   ///
   /// In en, this message translates to:
   /// **'You kept eye contact for:'**
   String get resultDurationIntro;
+
+  /// No description provided for @focusRank.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus Rank'**
+  String get focusRank;
+
+  /// No description provided for @rankDistracted.
+  ///
+  /// In en, this message translates to:
+  /// **'Distracted'**
+  String get rankDistracted;
+
+  /// No description provided for @rankRookieFocus.
+  ///
+  /// In en, this message translates to:
+  /// **'Rookie Focus'**
+  String get rankRookieFocus;
+
+  /// No description provided for @rankSteadyEyes.
+  ///
+  /// In en, this message translates to:
+  /// **'Steady Eyes'**
+  String get rankSteadyEyes;
+
+  /// No description provided for @rankSteelEyes.
+  ///
+  /// In en, this message translates to:
+  /// **'Steel Eyes'**
+  String get rankSteelEyes;
+
+  /// No description provided for @rankEyeLockMaster.
+  ///
+  /// In en, this message translates to:
+  /// **'Eye Lock Master'**
+  String get rankEyeLockMaster;
+
+  /// No description provided for @newRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'NEW RECORD!'**
+  String get newRecord;
+
+  /// No description provided for @shareResult.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Result'**
+  String get shareResult;
+
+  /// No description provided for @shareResultTodo.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Result'**
+  String get shareResultTodo;
 
   /// No description provided for @resultDurationSeconds.
   ///

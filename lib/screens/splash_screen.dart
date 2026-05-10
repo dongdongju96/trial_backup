@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _timer = Timer(const Duration(milliseconds: 1200), () {
+    _timer = Timer(AppConstants.splashDuration, () {
       if (!mounted) {
         return;
       }
@@ -47,23 +47,16 @@ class _SplashScreenState extends State<SplashScreen> {
             const Icon(
               Icons.remove_red_eye_outlined,
               size: 76,
-              color: AppConstants.accentColor,
+              color: AppColors.cyanAccent,
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: AppSpacing.lg),
             Text(
               localizations.appTitle,
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.w900,
-                letterSpacing: 0,
-              ),
+              style: AppTextStyles.splashTitle,
             ),
-            const SizedBox(height: 12),
-            Text(
-              localizations.splashTagline,
-              style: const TextStyle(color: Colors.white70),
-            ),
+            const SizedBox(height: AppSpacing.sm),
+            Text(localizations.splashTagline, style: AppTextStyles.body),
           ],
         ),
       ),

@@ -1,6 +1,8 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
+import '../utils/constants.dart';
+
 class CameraPreviewWidget extends StatelessWidget {
   const CameraPreviewWidget({
     required this.controller,
@@ -18,14 +20,17 @@ class CameraPreviewWidget extends StatelessWidget {
         cameraController != null && cameraController.value.isInitialized;
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(AppRadii.sm),
       child: Container(
         width: 96,
         height: 128,
         decoration: BoxDecoration(
-          color: Colors.black,
-          border: Border.all(color: Colors.white24),
-          borderRadius: BorderRadius.circular(12),
+          gradient: AppGradients.surface,
+          border: Border.all(
+            color: AppColors.cyanAccent.withValues(alpha: 0.4),
+          ),
+          borderRadius: BorderRadius.circular(AppRadii.sm),
+          boxShadow: AppShadows.neonGlow(AppColors.cyanAccent),
         ),
         child: isReady
             ? CameraPreview(cameraController)
@@ -43,19 +48,22 @@ class _PreviewPlaceholder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(AppSpacing.xs),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.videocam_off_outlined, color: Colors.white54),
+          const Icon(
+            Icons.videocam_off_outlined,
+            color: AppColors.textSecondary,
+          ),
           if (statusText != null) ...[
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.xs),
             Text(
               statusText!,
               textAlign: TextAlign.center,
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontSize: 10, color: Colors.white54),
+              style: AppTextStyles.smallBody.copyWith(fontSize: 10),
             ),
           ],
         ],
