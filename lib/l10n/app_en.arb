@@ -1,0 +1,52 @@
+{
+  "@@locale": "en",
+  "appTitle": "Eye Lock Challenge",
+  "splashTagline": "Focus. Hold. Beat your time.",
+  "chooseChallengeMode": "Choose a challenge mode",
+  "modeSelectionDescription": "Keep your gaze locked on the highlighted eye area as long as you can.",
+  "maleMode": "Male Mode",
+  "femaleMode": "Female Mode",
+  "language": "Language",
+  "languageSelectionTitle": "Language",
+  "languageSelectionDescription": "Choose the language used in the app.",
+  "english": "English",
+  "korean": "Korean",
+  "cameraPermissionTitle": "Camera permission",
+  "cameraPermissionDescription": "This app uses the front camera only to estimate your gaze during the game. Camera images are not saved, recorded, or uploaded. All processing happens on your device.",
+  "privacyNotice": "Camera images are processed only on your device and are never saved or uploaded.",
+  "startChallenge": "Start challenge",
+  "allowCamera": "Allow camera",
+  "requesting": "Requesting...",
+  "openSettings": "Open settings",
+  "cameraDeniedMessage": "Camera permission is required to play the gaze challenge.",
+  "cameraPermanentlyDeniedMessage": "Camera permission is blocked. Please enable camera access in system settings.",
+  "preparingChallenge": "Preparing the challenge...",
+  "countdownInstruction": "Focus on the highlighted eye area.",
+  "mockTrackingActive": "Mock gaze tracking is active. The full camera pipeline comes next.",
+  "gazeMovedAway": "Gaze moved away.",
+  "savingResult": "Saving result...",
+  "cameraUnavailableMessage": "Camera preview unavailable. Using mock frames.",
+  "cameraStreamUnavailableMessage": "Camera stream unavailable. Using mock frames.",
+  "noFaceDetectedMessage": "No face detected. Keep your face visible to the front camera.",
+  "noEyesDetectedMessage": "Eyes not detected clearly. Move closer or improve lighting.",
+  "gameOver": "Game Over",
+  "resultDurationIntro": "You kept eye contact for:",
+  "resultDurationSeconds": "{seconds} seconds",
+  "@resultDurationSeconds": {
+    "placeholders": {
+      "seconds": {
+        "type": "String"
+      }
+    }
+  },
+  "retry": "Retry",
+  "backToModeSelection": "Mode selection",
+  "timerSeconds": "{seconds} s",
+  "@timerSeconds": {
+    "placeholders": {
+      "seconds": {
+        "type": "String"
+      }
+    }
+  }
+}
