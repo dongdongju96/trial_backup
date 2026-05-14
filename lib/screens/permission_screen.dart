@@ -79,141 +79,132 @@ class _PermissionScreenState extends State<PermissionScreen> {
         child: LayoutBuilder(
           builder: (context, constraints) {
             return SingleChildScrollView(
-              child: ConstrainedBox(
+              child: Container(
+                width: double.infinity,
                 constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                child: IntrinsicHeight(
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(AppSpacing.screenPadding),
-                    decoration: BoxDecoration(
-                      gradient: RadialGradient(
-                        center: Alignment.topCenter,
-                        radius: 1.1,
-                        colors: [
-                          AppColors.cyanAccent.withValues(alpha: 0.14),
-                          AppColors.background,
+                padding: const EdgeInsets.all(AppSpacing.screenPadding),
+                decoration: BoxDecoration(
+                  gradient: RadialGradient(
+                    center: Alignment.topCenter,
+                    radius: 1.1,
+                    colors: [
+                      AppColors.cyanAccent.withValues(alpha: 0.14),
+                      AppColors.background,
+                    ],
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    IconButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: const Icon(Icons.arrow_back),
+                    ),
+                    const SizedBox(height: AppSpacing.lg),
+                    Center(
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          boxShadow: AppShadows.neonGlow(AppColors.cyanAccent),
+                        ),
+                        child: const CircleAvatar(
+                          radius: 42,
+                          backgroundColor: AppColors.surfaceLight,
+                          child: Icon(
+                            Icons.photo_camera_front_outlined,
+                            size: 48,
+                            color: AppColors.cyanAccent,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.lg),
+                    Text(
+                      localizations.cameraPermissionTitle,
+                      style: AppTextStyles.heroTitle,
+                      textAlign: TextAlign.left,
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    Text(
+                      localizations.cameraPermissionDescription,
+                      style: AppTextStyles.body,
+                    ),
+                    const SizedBox(height: AppSpacing.lg),
+                    NeonCard(
+                      glowColor: AppColors.success,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            localizations.trustChecklistTitle,
+                            style: AppTextStyles.modeLabel,
+                          ),
+                          const SizedBox(height: AppSpacing.md),
+                          PrivacyCheckItem(
+                            text: localizations.trustOnDeviceProcessing,
+                          ),
+                          const SizedBox(height: AppSpacing.sm),
+                          PrivacyCheckItem(
+                            text: localizations.trustNoRecording,
+                          ),
+                          const SizedBox(height: AppSpacing.sm),
+                          PrivacyCheckItem(text: localizations.trustNoUpload),
+                          const SizedBox(height: AppSpacing.sm),
+                          PrivacyCheckItem(
+                            text: localizations.trustNoFaceIdentification,
+                          ),
                         ],
                       ),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        IconButton(
-                          onPressed: () => Navigator.of(context).pop(),
-                          icon: const Icon(Icons.arrow_back),
+                    const SizedBox(height: AppSpacing.xl),
+                    if (_isChecking)
+                      const Center(child: CircularProgressIndicator())
+                    else if (_permissionState == CameraPermissionState.granted)
+                      PrimaryButton(
+                        label: localizations.startChallenge,
+                        icon: Icons.play_arrow,
+                        onPressed: _startGame,
+                      )
+                    else ...[
+                      Text(
+                        _permissionState ==
+                                CameraPermissionState.permanentlyDenied
+                            ? localizations.cameraPermanentlyDeniedMessage
+                            : localizations.cameraDeniedMessage,
+                        style: AppTextStyles.smallBody.copyWith(
+                          color: AppColors.pinkAccent,
                         ),
-                        const Spacer(),
-                        Center(
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              boxShadow: AppShadows.neonGlow(
-                                AppColors.cyanAccent,
-                              ),
-                            ),
-                            child: const CircleAvatar(
-                              radius: 42,
-                              backgroundColor: AppColors.surfaceLight,
-                              child: Icon(
-                                Icons.photo_camera_front_outlined,
-                                size: 48,
-                                color: AppColors.cyanAccent,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: AppSpacing.lg),
-                        Text(
-                          localizations.cameraPermissionTitle,
-                          style: AppTextStyles.heroTitle,
-                          textAlign: TextAlign.left,
-                        ),
-                        const SizedBox(height: AppSpacing.md),
-                        Text(
-                          localizations.cameraPermissionDescription,
-                          style: AppTextStyles.body,
-                        ),
-                        const SizedBox(height: AppSpacing.lg),
-                        NeonCard(
-                          glowColor: AppColors.success,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                localizations.trustChecklistTitle,
-                                style: AppTextStyles.modeLabel,
-                              ),
-                              const SizedBox(height: AppSpacing.md),
-                              PrivacyCheckItem(
-                                text: localizations.trustOnDeviceProcessing,
-                              ),
-                              const SizedBox(height: AppSpacing.sm),
-                              PrivacyCheckItem(
-                                text: localizations.trustNoRecording,
-                              ),
-                              const SizedBox(height: AppSpacing.sm),
-                              PrivacyCheckItem(
-                                text: localizations.trustNoUpload,
-                              ),
-                              const SizedBox(height: AppSpacing.sm),
-                              PrivacyCheckItem(
-                                text: localizations.trustNoFaceIdentification,
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: AppSpacing.xl),
-                        if (_isChecking)
-                          const Center(child: CircularProgressIndicator())
-                        else if (_permissionState ==
-                            CameraPermissionState.granted)
-                          PrimaryButton(
-                            label: localizations.startChallenge,
-                            icon: Icons.play_arrow,
-                            onPressed: _startGame,
-                          )
-                        else ...[
-                          Text(
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+                      PrimaryButton(
+                        label:
                             _permissionState ==
-                                    CameraPermissionState.permanentlyDenied
-                                ? localizations.cameraPermanentlyDeniedMessage
-                                : localizations.cameraDeniedMessage,
-                            style: AppTextStyles.smallBody.copyWith(
-                              color: AppColors.pinkAccent,
-                            ),
-                          ),
-                          const SizedBox(height: AppSpacing.md),
-                          PrimaryButton(
-                            label:
-                                _permissionState ==
-                                    CameraPermissionState.permanentlyDenied
-                                ? localizations.openSettings
-                                : _isRequesting
-                                ? localizations.requesting
-                                : localizations.allowCamera,
-                            icon:
-                                _permissionState ==
-                                    CameraPermissionState.permanentlyDenied
-                                ? Icons.settings_outlined
-                                : Icons.camera_alt_outlined,
-                            onPressed: _isRequesting
-                                ? null
-                                : _permissionState ==
-                                      CameraPermissionState.permanentlyDenied
-                                ? () => _permissionService.openSystemSettings()
-                                : _requestPermission,
-                          ),
-                          const SizedBox(height: AppSpacing.sm),
-                          SecondaryButton(
-                            label: localizations.later,
-                            icon: Icons.arrow_back,
-                            onPressed: () => Navigator.of(context).pop(),
-                          ),
-                        ],
-                        const Spacer(),
-                      ],
-                    ),
-                  ),
+                                CameraPermissionState.permanentlyDenied
+                            ? localizations.openSettings
+                            : _isRequesting
+                            ? localizations.requesting
+                            : localizations.allowCamera,
+                        icon:
+                            _permissionState ==
+                                CameraPermissionState.permanentlyDenied
+                            ? Icons.settings_outlined
+                            : Icons.camera_alt_outlined,
+                        onPressed: _isRequesting
+                            ? null
+                            : _permissionState ==
+                                  CameraPermissionState.permanentlyDenied
+                            ? () => _permissionService.openSystemSettings()
+                            : _requestPermission,
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      SecondaryButton(
+                        label: localizations.later,
+                        icon: Icons.arrow_back,
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
+                    ],
+                    const SizedBox(height: AppSpacing.lg),
+                  ],
                 ),
               ),
             );

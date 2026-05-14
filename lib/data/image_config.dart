@@ -42,41 +42,74 @@ class GameImageConfig {
 class ImageConfig {
   const ImageConfig._();
 
-  static const String malePlaceholderPath =
-      'assets/images/male_mode/sample_01.png';
-  static const String femalePlaceholderPath =
-      'assets/images/female_mode/sample_01.png';
+  static const String koreanMaleImagePath = 'assets/images/game/ko_male.png';
+  static const String koreanFemaleImagePath =
+      'assets/images/game/ko_female.png';
+  static const String englishMaleImagePath = 'assets/images/game/en_male.png';
+  static const String englishFemaleImagePath =
+      'assets/images/game/en_female.png';
 
-  static const GameImageConfig male = GameImageConfig(
+  static const GameImageConfig koreanMale = GameImageConfig(
     mode: GameMode.male,
-    imagePath: malePlaceholderPath,
+    imagePath: koreanMaleImagePath,
     fallbackDisplayLabel: 'Male Mode',
-    targetArea: TargetArea(x: 0.26, y: 0.30, width: 0.48, height: 0.13),
+    // The values are normalized: x/y/width/height are percentages of the image.
+    // For example, x: 0.26 means "start 26% from the left edge".
+    targetArea: TargetArea(x: 0.24, y: 0.235, width: 0.43, height: 0.10),
     placeholderGradientColors: [
       AppColors.surface,
       AppColors.portraitMaleGradientEnd,
     ],
   );
 
-  static const GameImageConfig female = GameImageConfig(
+  static const GameImageConfig koreanFemale = GameImageConfig(
     mode: GameMode.female,
-    imagePath: femalePlaceholderPath,
+    imagePath: koreanFemaleImagePath,
     fallbackDisplayLabel: 'Female Mode',
-    targetArea: TargetArea(x: 0.25, y: 0.29, width: 0.50, height: 0.14),
+    targetArea: TargetArea(x: 0.25, y: 0.27, width: 0.42, height: 0.10),
     placeholderGradientColors: [
       AppColors.surface,
       AppColors.portraitFemaleGradientEnd,
     ],
   );
 
-  static const List<GameImageConfig> all = [male, female];
+  static const GameImageConfig englishMale = GameImageConfig(
+    mode: GameMode.male,
+    imagePath: englishMaleImagePath,
+    fallbackDisplayLabel: 'Male Mode',
+    targetArea: TargetArea(x: 0.27, y: 0.25, width: 0.42, height: 0.10),
+    placeholderGradientColors: [
+      AppColors.surface,
+      AppColors.portraitMaleGradientEnd,
+    ],
+  );
 
-  static GameImageConfig forMode(GameMode mode) {
+  static const GameImageConfig englishFemale = GameImageConfig(
+    mode: GameMode.female,
+    imagePath: englishFemaleImagePath,
+    fallbackDisplayLabel: 'Female Mode',
+    targetArea: TargetArea(x: 0.25, y: 0.29, width: 0.43, height: 0.10),
+    placeholderGradientColors: [
+      AppColors.surface,
+      AppColors.portraitFemaleGradientEnd,
+    ],
+  );
+
+  static const List<GameImageConfig> all = [
+    koreanMale,
+    koreanFemale,
+    englishMale,
+    englishFemale,
+  ];
+
+  static GameImageConfig forMode(GameMode mode, {Locale? locale}) {
+    final isKorean = locale?.languageCode.toLowerCase() == 'ko';
+
     switch (mode) {
       case GameMode.male:
-        return male;
+        return isKorean ? koreanMale : englishMale;
       case GameMode.female:
-        return female;
+        return isKorean ? koreanFemale : englishFemale;
     }
   }
 }

@@ -38,12 +38,10 @@ class MaskedImageWidget extends StatelessWidget {
               children: [
                 _ChallengeImage(imagePath: imagePath),
 
-                // Countdown state: cover everything except the eye target area.
-                if (!isRevealed) ..._buildMaskPieces(size, targetRect),
-
-                // The target outline helps verify that the masked area and
-                // gameplay target use the exact same rectangle.
-                if (!isRevealed) _TargetOutline(targetRect: targetRect),
+                // Countdown state: place black boxes over the challenge image,
+                // leaving the full-width eye strip visible underneath.
+                if (!isRevealed)
+                  ..._buildCountdownMask(size: size, targetRect: targetRect),
 
                 // Extra UI, such as a countdown number, is always rendered last
                 // so it appears above both the image and the mask.
@@ -56,7 +54,10 @@ class MaskedImageWidget extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildMaskPieces(Size size, Rect targetRect) {
+  List<Widget> _buildCountdownMask({
+    required Size size,
+    required Rect targetRect,
+  }) {
     return [
       Positioned(
         left: 0,
@@ -70,20 +71,6 @@ class MaskedImageWidget extends StatelessWidget {
         top: targetRect.bottom,
         width: size.width,
         height: size.height - targetRect.bottom,
-        child: const ColoredBox(color: AppColors.mask),
-      ),
-      Positioned(
-        left: 0,
-        top: targetRect.top,
-        width: targetRect.left,
-        height: targetRect.height,
-        child: const ColoredBox(color: AppColors.mask),
-      ),
-      Positioned(
-        left: targetRect.right,
-        top: targetRect.top,
-        width: size.width - targetRect.right,
-        height: targetRect.height,
         child: const ColoredBox(color: AppColors.mask),
       ),
     ];
@@ -103,28 +90,6 @@ class _ChallengeImage extends StatelessWidget {
       errorBuilder: (context, error, stackTrace) {
         return const _PlaceholderPortrait();
       },
-    );
-  }
-}
-
-class _TargetOutline extends StatelessWidget {
-  const _TargetOutline({required this.targetRect});
-
-  final Rect targetRect;
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned.fromRect(
-      rect: targetRect,
-      child: IgnorePointer(
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            border: Border.all(color: AppColors.cyanAccent, width: 2),
-            borderRadius: BorderRadius.circular(AppRadii.sm),
-            boxShadow: AppShadows.neonGlow(AppColors.cyanAccent),
-          ),
-        ),
-      ),
     );
   }
 }

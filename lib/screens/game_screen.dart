@@ -28,13 +28,21 @@ class GameScreen extends StatefulWidget {
 }
 
 class _GameScreenState extends State<GameScreen> {
-  late final GameController _controller;
+  GameController? _controller;
 
   @override
-  void initState() {
-    super.initState();
-    final imageConfig = ImageConfig.forMode(widget.mode);
-    _controller = GameController(
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_controller != null) {
+      return;
+    }
+
+    // The selected app language decides which localized image set is used.
+    // GameController still receives one fixed config, so countdown and gameplay
+    // always share the exact same image and target eye area.
+    final locale = Localizations.localeOf(context);
+    final imageConfig = ImageConfig.forMode(widget.mode, locale: locale);
+    final controller = GameController(
       mode: widget.mode,
       imageConfig: imageConfig,
       timerService: GameTimerService(),
@@ -42,16 +50,22 @@ class _GameScreenState extends State<GameScreen> {
       faceLandmarkerService: MockFaceLandmarkerService(),
       gazeDetector: MockGazeDetector(),
     )..addListener(_handleGameUpdate);
+    _controller = controller;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _controller.prepare();
+      controller.prepare();
     });
   }
 
   void _handleGameUpdate() {
-    final result = _controller.result;
-    if (_controller.state == GameState.finished && result != null && mounted) {
-      _controller.removeListener(_handleGameUpdate);
+    final controller = _controller;
+    if (controller == null) {
+      return;
+    }
+
+    final result = controller.result;
+    if (controller.state == GameState.finished && result != null && mounted) {
+      controller.removeListener(_handleGameUpdate);
       Navigator.of(
         context,
       ).pushReplacementNamed(ResultScreen.routeName, arguments: result);
@@ -60,15 +74,20 @@ class _GameScreenState extends State<GameScreen> {
 
   @override
   void dispose() {
-    _controller.removeListener(_handleGameUpdate);
-    _controller.dispose();
+    _controller?.removeListener(_handleGameUpdate);
+    _controller?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final controller = _controller;
+    if (controller == null) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
     return AnimatedBuilder(
-      animation: _controller,
+      animation: controller,
       builder: (context, _) {
         final localizations = AppLocalizations.of(context);
 
@@ -91,18 +110,29 @@ class _GameScreenState extends State<GameScreen> {
                 children: [
                   _GameHud(
                     modeLabel: _modeLabel(localizations, widget.mode),
-                    elapsedText: _formatHudTime(_controller.elapsed),
-                    statusText: _hudStatusText(localizations),
+                    elapsedText: _formatHudTime(controller.elapsed),
+                    statusText: _hudStatusText(localizations, controller),
                   ),
                   const SizedBox(height: AppSpacing.lg),
                   Expanded(
                     child: Center(
                       child: MaskedImageWidget(
-                        imagePath: _controller.imageConfig.imagePath,
-                        targetArea: _controller.imageConfig.targetArea,
-                        isRevealed: _controller.isImageRevealed,
-                        overlay: _buildImageOverlay(localizations),
+                        imagePath: controller.imageConfig.imagePath,
+                        targetArea: controller.imageConfig.targetArea,
+                        isRevealed: controller.isImageRevealed,
+                        overlay: _buildImageOverlay(localizations, controller),
                       ),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  Visibility(
+                    visible: controller.state == GameState.playing,
+                    maintainAnimation: true,
+                    maintainSize: true,
+                    maintainState: true,
+                    child: _GameplayStatusPanel(
+                      instruction: localizations.gameplayInstruction,
+                      stabilityLabel: localizations.focusStability,
                     ),
                   ),
                   if (AppConstants.showDebugCameraPreview) ...[
@@ -110,16 +140,16 @@ class _GameScreenState extends State<GameScreen> {
                     Row(
                       children: [
                         CameraPreviewWidget(
-                          controller: _controller.cameraService.controller,
+                          controller: controller.cameraService.controller,
                           statusText: _feedbackText(
                             localizations,
-                            _controller.cameraFeedback,
+                            controller.cameraFeedback,
                           ),
                         ),
                         const SizedBox(width: AppSpacing.md),
                         Expanded(
                           child: Text(
-                            _statusText(localizations, _controller.state),
+                            _statusText(localizations, controller),
                             style: AppTextStyles.smallBody,
                           ),
                         ),
@@ -144,23 +174,19 @@ class _GameScreenState extends State<GameScreen> {
     }
   }
 
-  Widget? _buildImageOverlay(AppLocalizations localizations) {
-    if (_controller.state == GameState.countdown) {
+  Widget? _buildImageOverlay(
+    AppLocalizations localizations,
+    GameController controller,
+  ) {
+    if (controller.state == GameState.countdown) {
       return CountdownWidget(
         lockText: localizations.countdownLock,
-        onFinished: _controller.startPlaying,
+        onFinished: controller.startPlaying,
       );
     }
 
-    if (_controller.state == GameState.preparing) {
+    if (controller.state == GameState.preparing) {
       return const Center(child: CircularProgressIndicator());
-    }
-
-    if (_controller.state == GameState.playing) {
-      return _GameplayImageOverlay(
-        instruction: localizations.gameplayInstruction,
-        stabilityLabel: localizations.focusStability,
-      );
     }
 
     return null;
@@ -175,18 +201,24 @@ class _GameScreenState extends State<GameScreen> {
     return '$minutes:$seconds.$centiseconds';
   }
 
-  String _hudStatusText(AppLocalizations localizations) {
+  String _hudStatusText(
+    AppLocalizations localizations,
+    GameController controller,
+  ) {
     final feedbackText = _feedbackText(
       localizations,
-      _controller.trackingFeedback ?? _controller.cameraFeedback,
+      controller.trackingFeedback ?? controller.cameraFeedback,
     );
     return feedbackText ?? localizations.focusLocked;
   }
 
-  String _statusText(AppLocalizations localizations, GameState state) {
+  String _statusText(
+    AppLocalizations localizations,
+    GameController controller,
+  ) {
     final trackingFeedback = _feedbackText(
       localizations,
-      _controller.trackingFeedback,
+      controller.trackingFeedback,
     );
     if (trackingFeedback != null) {
       return trackingFeedback;
@@ -194,13 +226,13 @@ class _GameScreenState extends State<GameScreen> {
 
     final cameraFeedback = _feedbackText(
       localizations,
-      _controller.cameraFeedback,
+      controller.cameraFeedback,
     );
     if (cameraFeedback != null) {
       return cameraFeedback;
     }
 
-    switch (state) {
+    switch (controller.state) {
       case GameState.idle:
       case GameState.preparing:
         return localizations.preparingChallenge;
@@ -286,8 +318,8 @@ class _GameHud extends StatelessWidget {
   }
 }
 
-class _GameplayImageOverlay extends StatelessWidget {
-  const _GameplayImageOverlay({
+class _GameplayStatusPanel extends StatelessWidget {
+  const _GameplayStatusPanel({
     required this.instruction,
     required this.stabilityLabel,
   });
@@ -299,19 +331,14 @@ class _GameplayImageOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     const stabilityValue = 0.82;
 
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Container(
-        width: double.infinity,
-        margin: const EdgeInsets.all(AppSpacing.md),
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: AppGradients.surface,
+        borderRadius: BorderRadius.circular(AppRadii.lg),
+        border: Border.all(color: AppColors.cyanAccent.withValues(alpha: 0.34)),
+      ),
+      child: Padding(
         padding: const EdgeInsets.all(AppSpacing.md),
-        decoration: BoxDecoration(
-          color: AppColors.background.withValues(alpha: 0.72),
-          borderRadius: BorderRadius.circular(AppRadii.lg),
-          border: Border.all(
-            color: AppColors.cyanAccent.withValues(alpha: 0.34),
-          ),
-        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
