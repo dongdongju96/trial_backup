@@ -7,10 +7,11 @@ import '../models/target_area.dart';
 
 class GazeDetector {
   GazeDetector({
-    this.frameWindow = 10,
-    this.failThreshold = 7,
-    this.maxGazeX = 0.65,
-    this.maxDownGazeY = 0.65,
+    this.frameWindow = 12,
+    this.failThreshold = 9,
+    this.maxGazeX = 0.72,
+    this.maxDownGazeY = 0.72,
+    this.trackingLossGraceFrames = 12,
   });
 
   final int frameWindow;
@@ -22,20 +23,38 @@ class GazeDetector {
   /// The user fails when gazeY is too far down.
   final double maxDownGazeY;
 
+  /// Short detector dropouts are treated as tracking uncertainty, not user
+  /// failure. This avoids ending the game because of one bad camera frame.
+  final int trackingLossGraceFrames;
+
   final Queue<bool> _recentFailures = Queue<bool>();
+  int _trackingLossFrames = 0;
 
   bool updateFromLandmarks(FaceLandmarkResult result, TargetArea targetArea) {
+    if (result.isSkippedFrame) {
+      return true;
+    }
+
     // targetArea is kept in the API because later calibration can compare the
     // user's gaze against the image eye target. For now, gaze is estimated from
     // the user's eye landmarks only.
-    final gazeData = _toGazeData(result);
+    final gazeData = toGazeData(result);
     return update(gazeData);
   }
 
   bool update(GazeData gazeData) {
+    final hasTracking = gazeData.isFaceDetected && gazeData.isEyesDetected;
+    if (!hasTracking) {
+      _trackingLossFrames += 1;
+      if (_trackingLossFrames <= trackingLossGraceFrames) {
+        return true;
+      }
+    } else {
+      _trackingLossFrames = 0;
+    }
+
     final failed =
-        !gazeData.isFaceDetected ||
-        !gazeData.isEyesDetected ||
+        !hasTracking ||
         gazeData.gazeX.abs() > maxGazeX ||
         gazeData.gazeY > maxDownGazeY;
 
@@ -50,9 +69,10 @@ class GazeDetector {
 
   void reset() {
     _recentFailures.clear();
+    _trackingLossFrames = 0;
   }
 
-  GazeData _toGazeData(FaceLandmarkResult result) {
+  GazeData toGazeData(FaceLandmarkResult result) {
     if (!result.isFaceDetected || !result.hasEyeData) {
       return const GazeData(
         isFaceDetected: false,
@@ -124,5 +144,6 @@ class GazeDetector {
 }
 
 class MockGazeDetector extends GazeDetector {
-  MockGazeDetector() : super(frameWindow: 10, failThreshold: 7);
+  MockGazeDetector()
+    : super(frameWindow: 10, failThreshold: 7, trackingLossGraceFrames: 0);
 }

@@ -1,53 +1,137 @@
+import 'dart:io';
+
+import 'package:camera/camera.dart';
 import 'package:flutter/services.dart';
 
 import '../models/face_landmark_result.dart';
+import 'camera_frame.dart';
 import 'face_landmarker_service.dart';
 
 class MediaPipeFaceLandmarkerService implements FaceLandmarkerService {
-  static const String modelAssetPath = 'assets/models/face_landmarker.task';
+  MediaPipeFaceLandmarkerService({
+    this.minInferenceInterval = const Duration(milliseconds: 100),
+  });
 
-  ByteData? _modelBytes;
+  static const String modelAssetPath = 'assets/models/face_landmarker.task';
+  static const MethodChannel _channel = MethodChannel(
+    'eye_lock_challenge/face_landmarker',
+  );
+
+  final Duration minInferenceInterval;
+
+  DateTime? _lastInferenceAt;
 
   @override
   Future<void> initialize() async {
-    // This loads the MediaPipe task model from Flutter assets.
-    // Add the real face_landmarker.task file at:
-    // assets/models/face_landmarker.task
-    _modelBytes = await rootBundle.load(modelAssetPath);
-
-    // TODO(MediaPipe): Create the real Face Landmarker instance here.
-    //
-    // Depending on the MediaPipe Flutter support available in your project,
-    // this may happen in one of two ways:
-    // 1. Use a Flutter-compatible MediaPipe package directly in Dart.
-    // 2. Add Android/iOS native bridge code with MethodChannel or
-    //    EventChannel. The native side should receive the model bytes/path,
-    //    process camera frames on-device, and return normalized landmark
-    //    points back to Dart.
-    //
-    // Important: camera frames must stay local. Do not save frames and do not
-    // upload frames to any server.
+    final modelBytes = await rootBundle.load(modelAssetPath);
+    await _channel.invokeMethod<void>('initialize', {
+      'modelBytes': modelBytes.buffer.asUint8List(),
+      'minFaceDetectionConfidence': 0.55,
+      'minFacePresenceConfidence': 0.55,
+      'minTrackingConfidence': 0.55,
+    });
   }
 
   @override
   Future<FaceLandmarkResult> processFrame(Object? frame) async {
-    if (_modelBytes == null) {
-      throw StateError('MediaPipeFaceLandmarkerService is not initialized.');
+    if (frame is! CameraFrame) {
+      return const FaceLandmarkResult(
+        isFaceDetected: false,
+        leftEyePoints: [],
+        rightEyePoints: [],
+      );
     }
 
-    // TODO(MediaPipe): Convert the camera frame into the image format expected
-    // by MediaPipe Face Landmarker, then run inference.
-    //
-    // The returned result should use normalized coordinates from 0.0 to 1.0,
-    // matching FaceLandmarkResult and GazeDetector.
-    throw UnimplementedError(
-      'Real MediaPipe frame processing will be added after native bridge setup.',
+    final now = DateTime.now();
+    final lastInferenceAt = _lastInferenceAt;
+    if (lastInferenceAt != null &&
+        now.difference(lastInferenceAt) < minInferenceInterval) {
+      return const FaceLandmarkResult(
+        isFaceDetected: false,
+        leftEyePoints: [],
+        rightEyePoints: [],
+        isSkippedFrame: true,
+      );
+    }
+    _lastInferenceAt = now;
+
+    final result = await _channel.invokeMapMethod<String, Object?>(
+      'detect',
+      _frameToMessage(frame),
     );
+    return _resultFromMessage(result);
   }
 
   @override
   Future<void> dispose() async {
-    // TODO(MediaPipe): Close the real MediaPipe detector or native bridge here.
-    _modelBytes = null;
+    _lastInferenceAt = null;
+    await _channel.invokeMethod<void>('dispose');
+  }
+
+  Map<String, Object?> _frameToMessage(CameraFrame frame) {
+    final image = frame.image;
+    return {
+      'width': image.width,
+      'height': image.height,
+      'format': image.format.group.name,
+      'sensorOrientation': frame.sensorOrientation,
+      'isFrontFacing': frame.isFrontFacing,
+      'timestampMs': frame.timestamp.millisecondsSinceEpoch,
+      'platform': Platform.operatingSystem,
+      'planes': image.planes.map(_planeToMessage).toList(growable: false),
+    };
+  }
+
+  Map<String, Object?> _planeToMessage(Plane plane) {
+    return {
+      'bytes': Uint8List.fromList(plane.bytes),
+      'bytesPerRow': plane.bytesPerRow,
+      'bytesPerPixel': plane.bytesPerPixel ?? 1,
+      'width': plane.width,
+      'height': plane.height,
+    };
+  }
+
+  FaceLandmarkResult _resultFromMessage(Map<String, Object?>? message) {
+    if (message == null || message['isFaceDetected'] != true) {
+      return const FaceLandmarkResult(
+        isFaceDetected: false,
+        leftEyePoints: [],
+        rightEyePoints: [],
+      );
+    }
+
+    return FaceLandmarkResult(
+      isFaceDetected: true,
+      leftEyePoints: _pointsFromMessage(message['leftEyePoints']),
+      rightEyePoints: _pointsFromMessage(message['rightEyePoints']),
+      leftIrisCenter: _pointFromMessage(message['leftIrisCenter']),
+      rightIrisCenter: _pointFromMessage(message['rightIrisCenter']),
+    );
+  }
+
+  List<Offset> _pointsFromMessage(Object? value) {
+    if (value is! List<Object?>) {
+      return const [];
+    }
+
+    return value
+        .map(_pointFromMessage)
+        .whereType<Offset>()
+        .toList(growable: false);
+  }
+
+  Offset? _pointFromMessage(Object? value) {
+    if (value is! Map<Object?, Object?>) {
+      return null;
+    }
+
+    final x = value['x'];
+    final y = value['y'];
+    if (x is! num || y is! num) {
+      return null;
+    }
+
+    return Offset(x.toDouble(), y.toDouble());
   }
 }

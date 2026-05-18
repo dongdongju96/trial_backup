@@ -5,6 +5,7 @@ class AppConstants {
 
   static const Duration splashDuration = Duration(milliseconds: 1200);
   static const bool showDebugCameraPreview = false;
+  static const bool useMockFaceTracking = bool.fromEnvironment('USE_MOCK_GAZE');
 }
 
 class AppColors {

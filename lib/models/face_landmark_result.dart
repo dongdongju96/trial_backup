@@ -7,6 +7,7 @@ class FaceLandmarkResult {
     required this.rightEyePoints,
     this.leftIrisCenter,
     this.rightIrisCenter,
+    this.isSkippedFrame = false,
   });
 
   final bool isFaceDetected;
@@ -20,6 +21,9 @@ class FaceLandmarkResult {
   /// Optional normalized iris center. MediaPipe may provide this in some modes.
   final Offset? leftIrisCenter;
   final Offset? rightIrisCenter;
+
+  /// Frames skipped by throttling should not count as gaze failures.
+  final bool isSkippedFrame;
 
   bool get hasEyeData {
     return leftEyePoints.isNotEmpty && rightEyePoints.isNotEmpty;

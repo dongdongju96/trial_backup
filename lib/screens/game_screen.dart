@@ -5,9 +5,11 @@ import '../data/image_config.dart';
 import '../models/game_feedback_type.dart';
 import '../models/game_mode.dart';
 import '../models/game_state.dart';
+import '../models/gaze_data.dart';
 import '../services/camera_service.dart';
 import '../services/game_timer_service.dart';
 import '../services/gaze_detector.dart';
+import '../services/mediapipe_face_landmarker_service.dart';
 import '../services/mock_face_landmarker_service.dart';
 import '../utils/constants.dart';
 import '../widgets/camera_preview_widget.dart';
@@ -47,8 +49,12 @@ class _GameScreenState extends State<GameScreen> {
       imageConfig: imageConfig,
       timerService: GameTimerService(),
       cameraService: CameraService(),
-      faceLandmarkerService: MockFaceLandmarkerService(),
-      gazeDetector: MockGazeDetector(),
+      faceLandmarkerService: AppConstants.useMockFaceTracking
+          ? MockFaceLandmarkerService()
+          : MediaPipeFaceLandmarkerService(),
+      gazeDetector: AppConstants.useMockFaceTracking
+          ? MockGazeDetector()
+          : GazeDetector(),
     )..addListener(_handleGameUpdate);
     _controller = controller;
 
@@ -178,15 +184,29 @@ class _GameScreenState extends State<GameScreen> {
     AppLocalizations localizations,
     GameController controller,
   ) {
+    final gazePointer = _GazePointerOverlay(
+      gazeData: controller.latestGazeData,
+    );
+
     if (controller.state == GameState.countdown) {
-      return CountdownWidget(
-        lockText: localizations.countdownLock,
-        onFinished: controller.startPlaying,
+      return Stack(
+        fit: StackFit.expand,
+        children: [
+          CountdownWidget(
+            lockText: localizations.countdownLock,
+            onFinished: controller.startPlaying,
+          ),
+          gazePointer,
+        ],
       );
     }
 
     if (controller.state == GameState.preparing) {
       return const Center(child: CircularProgressIndicator());
+    }
+
+    if (controller.state == GameState.playing) {
+      return gazePointer;
     }
 
     return null;
@@ -263,6 +283,71 @@ class _GameScreenState extends State<GameScreen> {
       case null:
         return null;
     }
+  }
+}
+
+class _GazePointerOverlay extends StatelessWidget {
+  const _GazePointerOverlay({required this.gazeData});
+
+  static const double _size = 14;
+  static const double _edgePadding = 8;
+
+  final GazeData? gazeData;
+
+  @override
+  Widget build(BuildContext context) {
+    final data = gazeData;
+    final isVisible =
+        data != null && data.isFaceDetected && data.isEyesDetected;
+
+    return IgnorePointer(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final maxLeft = constraints.maxWidth - _size - _edgePadding;
+          final maxTop = constraints.maxHeight - _size - _edgePadding;
+          final rightLimit = maxLeft < _edgePadding ? _edgePadding : maxLeft;
+          final bottomLimit = maxTop < _edgePadding ? _edgePadding : maxTop;
+          final left = isVisible
+              ? (((data.gazeX + 1) / 2) * constraints.maxWidth - _size / 2)
+                    .clamp(_edgePadding, rightLimit)
+              : constraints.maxWidth / 2 - _size / 2;
+          final top = isVisible
+              ? (((data.gazeY + 1) / 2) * constraints.maxHeight - _size / 2)
+                    .clamp(_edgePadding, bottomLimit)
+              : constraints.maxHeight / 2 - _size / 2;
+
+          return Stack(
+            children: [
+              AnimatedPositioned(
+                duration: const Duration(milliseconds: 90),
+                curve: Curves.easeOut,
+                left: left.toDouble(),
+                top: top.toDouble(),
+                width: _size,
+                height: _size,
+                child: AnimatedOpacity(
+                  duration: const Duration(milliseconds: 140),
+                  opacity: isVisible ? 1 : 0,
+                  child: const DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: AppColors.cyanAccent,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.cyanGlowShadow,
+                          blurRadius: 12,
+                          spreadRadius: 2,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
   }
 }
 

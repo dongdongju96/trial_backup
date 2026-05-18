@@ -21,7 +21,11 @@ void main() {
   });
 
   test('fails when 7 out of the latest 10 frames look away', () {
-    final detector = GazeDetector();
+    final detector = GazeDetector(
+      frameWindow: 10,
+      failThreshold: 7,
+      trackingLossGraceFrames: 0,
+    );
 
     for (var i = 0; i < 6; i++) {
       expect(
@@ -51,7 +55,11 @@ void main() {
   });
 
   test('treats missing face as gaze failure', () {
-    final detector = GazeDetector();
+    final detector = GazeDetector(
+      frameWindow: 10,
+      failThreshold: 7,
+      trackingLossGraceFrames: 0,
+    );
 
     for (var i = 0; i < 6; i++) {
       expect(
@@ -78,6 +86,43 @@ void main() {
       ),
       isFalse,
     );
+  });
+
+  test('does not fail on short tracking dropouts', () {
+    final detector = GazeDetector(trackingLossGraceFrames: 3);
+
+    for (var i = 0; i < 3; i++) {
+      expect(
+        detector.updateFromLandmarks(
+          const FaceLandmarkResult(
+            isFaceDetected: false,
+            leftEyePoints: [],
+            rightEyePoints: [],
+          ),
+          targetArea,
+        ),
+        isTrue,
+      );
+    }
+  });
+
+  test('ignores skipped frames', () {
+    final detector = GazeDetector(trackingLossGraceFrames: 0);
+
+    for (var i = 0; i < 20; i++) {
+      expect(
+        detector.updateFromLandmarks(
+          const FaceLandmarkResult(
+            isFaceDetected: false,
+            leftEyePoints: [],
+            rightEyePoints: [],
+            isSkippedFrame: true,
+          ),
+          targetArea,
+        ),
+        isTrue,
+      );
+    }
   });
 }
 

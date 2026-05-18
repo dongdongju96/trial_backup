@@ -7,6 +7,7 @@ import '../models/game_mode.dart';
 import '../models/game_feedback_type.dart';
 import '../models/game_result.dart';
 import '../models/game_state.dart';
+import '../models/gaze_data.dart';
 import '../services/camera_service.dart';
 import '../services/face_landmarker_service.dart';
 import '../services/game_timer_service.dart';
@@ -37,12 +38,14 @@ class GameController extends ChangeNotifier {
   bool _isProcessingFrame = false;
   GameFeedbackType? _cameraFeedback;
   GameFeedbackType? _trackingFeedback;
+  GazeData? _latestGazeData;
 
   GameState get state => _state;
   GameResult? get result => _result;
   Duration get elapsed => timerService.elapsed.value;
   GameFeedbackType? get cameraFeedback => _cameraFeedback;
   GameFeedbackType? get trackingFeedback => _trackingFeedback;
+  GazeData? get latestGazeData => _latestGazeData;
 
   // The image should be fully visible only after the countdown has finished.
   bool get isImageRevealed =>
@@ -65,6 +68,7 @@ class GameController extends ChangeNotifier {
     }
 
     _setState(GameState.countdown);
+    await _startCameraTracking();
   }
 
   Future<void> startPlaying() async {
@@ -76,8 +80,6 @@ class GameController extends ChangeNotifier {
     timerService.reset();
     timerService.start();
     _setState(GameState.playing);
-
-    await _startCameraTracking();
   }
 
   Future<void> failGame() async {
@@ -121,7 +123,7 @@ class GameController extends ChangeNotifier {
   }
 
   Future<void> _processCameraFrame(Object? frame) async {
-    if (_isProcessingFrame || _state != GameState.playing) {
+    if (_isProcessingFrame || !_shouldTrackGaze) {
       return;
     }
 
@@ -130,21 +132,30 @@ class GameController extends ChangeNotifier {
       // The controller talks only to the abstract service. This keeps the UI
       // independent from the future MediaPipe implementation.
       final landmarks = await faceLandmarkerService.processFrame(frame);
+      if (landmarks.isSkippedFrame) {
+        return;
+      }
       _updateTrackingMessage(
         isFaceDetected: landmarks.isFaceDetected,
         isEyesDetected: landmarks.hasEyeData,
       );
 
-      final isStillLooking = gazeDetector.updateFromLandmarks(
-        landmarks,
-        imageConfig.targetArea,
-      );
+      final gazeData = gazeDetector.toGazeData(landmarks);
+      _latestGazeData = gazeData;
+      notifyListeners();
+
+      final isStillLooking =
+          _state != GameState.playing || gazeDetector.update(gazeData);
       if (!isStillLooking) {
         await failGame();
       }
     } finally {
       _isProcessingFrame = false;
     }
+  }
+
+  bool get _shouldTrackGaze {
+    return _state == GameState.countdown || _state == GameState.playing;
   }
 
   void _setState(GameState value) {

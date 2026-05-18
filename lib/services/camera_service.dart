@@ -1,9 +1,13 @@
 import 'package:camera/camera.dart';
+import 'package:flutter/foundation.dart';
 
-typedef CameraFrameCallback = void Function(CameraImage frame);
+import 'camera_frame.dart';
+
+typedef CameraFrameCallback = void Function(CameraFrame frame);
 
 class CameraService {
   CameraController? _controller;
+  CameraDescription? _camera;
   bool _isStreaming = false;
 
   CameraController? get controller => _controller;
@@ -27,11 +31,14 @@ class CameraService {
       );
     }
 
+    _camera = frontCamera;
     final controller = CameraController(
       frontCamera,
       ResolutionPreset.low,
       enableAudio: false,
-      imageFormatGroup: ImageFormatGroup.yuv420,
+      imageFormatGroup: defaultTargetPlatform == TargetPlatform.iOS
+          ? ImageFormatGroup.bgra8888
+          : ImageFormatGroup.yuv420,
     );
 
     await controller.initialize();
@@ -47,7 +54,14 @@ class CameraService {
     await controller.startImageStream((image) {
       // Frames stay in memory only long enough for real-time processing.
       // They are never saved locally or uploaded anywhere.
-      onFrame(image);
+      onFrame(
+        CameraFrame(
+          image: image,
+          sensorOrientation: _camera?.sensorOrientation ?? 0,
+          isFrontFacing: _camera?.lensDirection == CameraLensDirection.front,
+          timestamp: DateTime.now(),
+        ),
+      );
     });
     _isStreaming = true;
   }
@@ -68,5 +82,6 @@ class CameraService {
     await stopImageStream();
     await _controller?.dispose();
     _controller = null;
+    _camera = null;
   }
 }
