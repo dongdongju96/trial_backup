@@ -4,7 +4,7 @@ import 'package:eye_lock_challenge/l10n/app_localizations.dart';
 import '../models/game_mode.dart';
 import '../services/permission_service.dart';
 import '../utils/constants.dart';
-import '../widgets/neon_card.dart';
+import '../widgets/clean_card.dart';
 import '../widgets/primary_button.dart';
 import '../widgets/privacy_check_item.dart';
 import '../widgets/secondary_button.dart';
@@ -83,16 +83,7 @@ class _PermissionScreenState extends State<PermissionScreen> {
                 width: double.infinity,
                 constraints: BoxConstraints(minHeight: constraints.maxHeight),
                 padding: const EdgeInsets.all(AppSpacing.screenPadding),
-                decoration: BoxDecoration(
-                  gradient: RadialGradient(
-                    center: Alignment.topCenter,
-                    radius: 1.1,
-                    colors: [
-                      AppColors.cyanAccent.withValues(alpha: 0.14),
-                      AppColors.background,
-                    ],
-                  ),
-                ),
+                color: AppColors.background,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -102,19 +93,13 @@ class _PermissionScreenState extends State<PermissionScreen> {
                     ),
                     const SizedBox(height: AppSpacing.lg),
                     Center(
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          boxShadow: AppShadows.neonGlow(AppColors.cyanAccent),
-                        ),
-                        child: const CircleAvatar(
-                          radius: 42,
-                          backgroundColor: AppColors.surfaceLight,
-                          child: Icon(
-                            Icons.photo_camera_front_outlined,
-                            size: 48,
-                            color: AppColors.cyanAccent,
-                          ),
+                      child: CircleAvatar(
+                        radius: 42,
+                        backgroundColor: AppColors.surfaceLight,
+                        child: const Icon(
+                          Icons.photo_camera_front_outlined,
+                          size: 48,
+                          color: AppColors.primaryPurple,
                         ),
                       ),
                     ),
@@ -130,8 +115,8 @@ class _PermissionScreenState extends State<PermissionScreen> {
                       style: AppTextStyles.body,
                     ),
                     const SizedBox(height: AppSpacing.lg),
-                    NeonCard(
-                      glowColor: AppColors.success,
+                    CleanCard(
+                      accentColor: AppColors.primaryPurple,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

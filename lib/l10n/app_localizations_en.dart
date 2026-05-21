@@ -9,10 +9,10 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'Eye Lock Challenge';
+  String get appTitle => 'StareDown Challenge';
 
   @override
-  String get appSubtitle => 'Gaze Focus Challenge';
+  String get appSubtitle => 'StareDown Challenge';
 
   @override
   String get keepEyesLocked => 'Keep your eyes locked on the target.';
@@ -28,13 +28,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get splashTagline => 'Focus. Hold. Beat your time.';
 
   @override
-  String get modeSelectionHeroTitleTop => 'EYE LOCK';
+  String get modeSelectionHeroTitleTop => 'STAREDOWN';
 
   @override
   String get modeSelectionHeroTitleBottom => 'CHALLENGE';
 
   @override
-  String get modeSelectionSubtitle => 'Gaze Focus Challenge';
+  String get modeSelectionSubtitle => 'StareDown Challenge';
 
   @override
   String get modeSelectionRule => 'Keep your eyes locked on the target.';
@@ -141,7 +141,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cameraDeniedMessage =>
-      'Camera permission is required to play the gaze challenge.';
+      'Camera permission is required to play StareDown Challenge.';
 
   @override
   String get cameraPermanentlyDeniedMessage =>
@@ -222,7 +222,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get rankSteelEyes => 'Steel Eyes';
 
   @override
-  String get rankEyeLockMaster => 'Eye Lock Master';
+  String get rankEyeLockMaster => 'StareDown Master';
 
   @override
   String get newRecord => 'NEW RECORD!';

@@ -25,7 +25,7 @@ class SecondaryButton extends StatelessWidget {
         onPressed: onPressed,
         icon: icon == null
             ? const SizedBox.shrink()
-            : Icon(icon, color: AppColors.cyanAccent),
+            : Icon(icon, color: AppColors.primaryPurple),
         label: Text(
           label,
           maxLines: 1,
@@ -34,7 +34,9 @@ class SecondaryButton extends StatelessWidget {
         ),
         style: OutlinedButton.styleFrom(
           backgroundColor: AppColors.surface,
-          side: BorderSide(color: AppColors.cyanAccent.withValues(alpha: 0.42)),
+          side: BorderSide(
+            color: AppColors.primaryPurple.withValues(alpha: 0.42),
+          ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppRadii.lg),
           ),

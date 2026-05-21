@@ -34,11 +34,8 @@ class _PrimaryButtonState extends State<PrimaryButton> {
       scale: _isPressed && isEnabled ? 0.97 : 1,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          gradient: isEnabled ? AppGradients.button : AppGradients.surface,
+          color: isEnabled ? AppColors.primaryPurple : AppColors.surfaceLight,
           borderRadius: BorderRadius.circular(AppRadii.lg),
-          boxShadow: isEnabled
-              ? AppShadows.neonGlow(AppColors.primaryPurple)
-              : null,
         ),
         child: Material(
           color: Colors.transparent,
@@ -59,7 +56,12 @@ class _PrimaryButtonState extends State<PrimaryButton> {
                     : MainAxisSize.min,
                 children: [
                   if (widget.icon != null) ...[
-                    Icon(widget.icon, color: AppColors.textPrimary),
+                    Icon(
+                      widget.icon,
+                      color: isEnabled
+                          ? AppColors.surface
+                          : AppColors.textSecondary,
+                    ),
                     const SizedBox(width: AppSpacing.xs),
                   ],
                   Flexible(
@@ -67,7 +69,11 @@ class _PrimaryButtonState extends State<PrimaryButton> {
                       widget.label,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: AppTextStyles.button,
+                      style: AppTextStyles.button.copyWith(
+                        color: isEnabled
+                            ? AppColors.surface
+                            : AppColors.textSecondary,
+                      ),
                     ),
                   ),
                 ],

@@ -25,12 +25,11 @@ class CameraPreviewWidget extends StatelessWidget {
         width: 96,
         height: 128,
         decoration: BoxDecoration(
-          gradient: AppGradients.surface,
+          color: AppColors.surface,
           border: Border.all(
-            color: AppColors.cyanAccent.withValues(alpha: 0.4),
+            color: AppColors.primaryPurple.withValues(alpha: 0.4),
           ),
           borderRadius: BorderRadius.circular(AppRadii.sm),
-          boxShadow: AppShadows.neonGlow(AppColors.cyanAccent),
         ),
         child: isReady
             ? CameraPreview(cameraController)

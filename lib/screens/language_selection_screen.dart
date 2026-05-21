@@ -71,12 +71,12 @@ class _LanguageTile extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppRadii.md),
         side: BorderSide(
-          color: isSelected ? AppColors.cyanAccent : AppColors.surfaceLight,
+          color: isSelected ? AppColors.primaryPurple : AppColors.surfaceLight,
         ),
       ),
       title: Text(label),
       trailing: isSelected
-          ? const Icon(Icons.check_circle, color: AppColors.cyanAccent)
+          ? const Icon(Icons.check_circle, color: AppColors.primaryPurple)
           : null,
       onTap: () => onSelected(locale),
     );

@@ -102,16 +102,7 @@ class _GameScreenState extends State<GameScreen> {
             child: Container(
               width: double.infinity,
               padding: const EdgeInsets.all(AppSpacing.gamePadding),
-              decoration: BoxDecoration(
-                gradient: RadialGradient(
-                  center: Alignment.topCenter,
-                  radius: 1.15,
-                  colors: [
-                    AppColors.primaryBlue.withValues(alpha: 0.16),
-                    AppColors.background,
-                  ],
-                ),
-              ),
+              color: AppColors.background,
               child: Column(
                 children: [
                   _GameHud(
@@ -121,13 +112,29 @@ class _GameScreenState extends State<GameScreen> {
                   ),
                   const SizedBox(height: AppSpacing.lg),
                   Expanded(
-                    child: Center(
-                      child: MaskedImageWidget(
-                        imagePath: controller.imageConfig.imagePath,
-                        targetArea: controller.imageConfig.targetArea,
-                        isRevealed: controller.isImageRevealed,
-                        overlay: _buildImageOverlay(localizations, controller),
-                      ),
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        var imageWidth = constraints.maxWidth;
+                        final imageHeight = imageWidth * 4 / 3;
+                        if (imageHeight > constraints.maxHeight) {
+                          imageWidth = constraints.maxHeight * 3 / 4;
+                        }
+
+                        return Center(
+                          child: SizedBox(
+                            width: imageWidth,
+                            child: MaskedImageWidget(
+                              imagePath: controller.imageConfig.imagePath,
+                              targetArea: controller.imageConfig.targetArea,
+                              isRevealed: controller.isImageRevealed,
+                              overlay: _buildImageOverlay(
+                                localizations,
+                                controller,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
                   const SizedBox(height: AppSpacing.md),
@@ -330,15 +337,8 @@ class _GazePointerOverlay extends StatelessWidget {
                   opacity: isVisible ? 1 : 0,
                   child: const DecoratedBox(
                     decoration: BoxDecoration(
-                      color: AppColors.cyanAccent,
+                      color: AppColors.primaryBlue,
                       shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.cyanGlowShadow,
-                          blurRadius: 12,
-                          spreadRadius: 2,
-                        ),
-                      ],
                     ),
                   ),
                 ),
@@ -366,9 +366,11 @@ class _GameHud extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        gradient: AppGradients.surface,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.xl),
-        border: Border.all(color: AppColors.cyanAccent.withValues(alpha: 0.28)),
+        border: Border.all(
+          color: AppColors.primaryPurple.withValues(alpha: 0.28),
+        ),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -377,7 +379,10 @@ class _GameHud extends StatelessWidget {
         ),
         child: Row(
           children: [
-            const Icon(Icons.center_focus_strong, color: AppColors.cyanAccent),
+            const Icon(
+              Icons.center_focus_strong,
+              color: AppColors.primaryPurple,
+            ),
             const SizedBox(width: AppSpacing.sm),
             Expanded(
               child: Text(
@@ -418,9 +423,11 @@ class _GameplayStatusPanel extends StatelessWidget {
 
     return DecoratedBox(
       decoration: BoxDecoration(
-        gradient: AppGradients.surface,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadii.lg),
-        border: Border.all(color: AppColors.cyanAccent.withValues(alpha: 0.34)),
+        border: Border.all(
+          color: AppColors.primaryPurple.withValues(alpha: 0.34),
+        ),
       ),
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.md),
@@ -438,7 +445,7 @@ class _GameplayStatusPanel extends StatelessWidget {
                 Text(
                   '${(stabilityValue * 100).round()}%',
                   style: AppTextStyles.smallBody.copyWith(
-                    color: AppColors.cyanAccent,
+                    color: AppColors.primaryPurple,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
@@ -452,7 +459,7 @@ class _GameplayStatusPanel extends StatelessWidget {
                 value: stabilityValue,
                 backgroundColor: AppColors.surfaceLight,
                 valueColor: const AlwaysStoppedAnimation<Color>(
-                  AppColors.cyanAccent,
+                  AppColors.primaryPurple,
                 ),
               ),
             ),

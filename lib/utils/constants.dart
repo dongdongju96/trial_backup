@@ -11,26 +11,26 @@ class AppConstants {
 class AppColors {
   const AppColors._();
 
-  static const Color background = Color(0xFF070712);
-  static const Color surface = Color(0xFF111326);
-  static const Color surfaceLight = Color(0xFF1A1D35);
-  static const Color primaryPurple = Color(0xFF8B5CF6);
-  static const Color primaryBlue = Color(0xFF3B82F6);
-  static const Color pinkAccent = Color(0xFFEC4899);
-  static const Color cyanAccent = Color(0xFF22D3EE);
-  static const Color textPrimary = Color(0xFFFFFFFF);
-  static const Color textSecondary = Color(0xFFB8B8D1);
-  static const Color danger = Color(0xFFFF4D6D);
-  static const Color success = Color(0xFF34D399);
+  static const Color background = Color(0xFFFFF8FC);
+  static const Color surface = Color(0xFFFFFFFF);
+  static const Color surfaceLight = Color(0xFFF3EEFF);
+  static const Color primaryPurple = Color(0xFFA98CF5);
+  static const Color primaryBlue = Color(0xFF8EBBFF);
+  static const Color pinkAccent = Color(0xFFFF9DB8);
+  static const Color cyanAccent = Color(0xFF73D7D0);
+  static const Color textPrimary = Color(0xFF352B48);
+  static const Color textSecondary = Color(0xFF756A89);
+  static const Color danger = Color(0xFFE56D93);
+  static const Color success = Color(0xFF63BFA4);
   static const Color mask = Color(0xFF000000);
-  static const Color placeholderMaleHair = Color(0xFF202633);
-  static const Color placeholderFemaleHair = Color(0xFF4A2637);
-  static const Color placeholderMaleSkin = Color(0xFFC99371);
-  static const Color placeholderFemaleSkin = Color(0xFFD8A17E);
-  static const Color placeholderMouth = Color(0xFF7A4B3A);
-  static const Color portraitMaleGradientEnd = Color(0xFF172C55);
-  static const Color portraitFemaleGradientEnd = Color(0xFF3A184A);
-  static const Color cyanGlowShadow = Color(0x4422D3EE);
+  static const Color placeholderMaleHair = Color(0xFF7586A7);
+  static const Color placeholderFemaleHair = Color(0xFFC483A3);
+  static const Color placeholderMaleSkin = Color(0xFFF1C3A8);
+  static const Color placeholderFemaleSkin = Color(0xFFF4C8B3);
+  static const Color placeholderMouth = Color(0xFFB56E8A);
+  static const Color portraitMaleGradientEnd = Color(0xFFE6EEFF);
+  static const Color portraitFemaleGradientEnd = Color(0xFFFFE0EC);
+  static const Color softShadow = Color(0x1A5F4B8B);
 
   // Backward-compatible names while the app moves toward AppColors.
   static const Color backgroundColor = background;
@@ -49,7 +49,7 @@ class AppSpacing {
   static const double xl = 32;
   static const double xxl = 40;
   static const double screenPadding = 24;
-  static const double gamePadding = 20;
+  static const double gamePadding = 14;
 }
 
 class AppRadii {
@@ -66,17 +66,13 @@ class AppGradients {
   const AppGradients._();
 
   static const LinearGradient button = LinearGradient(
-    colors: [
-      AppColors.primaryPurple,
-      AppColors.primaryBlue,
-      AppColors.cyanAccent,
-    ],
+    colors: [AppColors.primaryPurple, AppColors.primaryPurple],
     begin: Alignment.centerLeft,
     end: Alignment.centerRight,
   );
 
   static const LinearGradient surface = LinearGradient(
-    colors: [AppColors.surfaceLight, AppColors.surface],
+    colors: [AppColors.surface, AppColors.surface],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
@@ -97,27 +93,23 @@ class AppGradients {
 class AppShadows {
   const AppShadows._();
 
-  static List<BoxShadow> neonGlow(Color color) {
+  static List<BoxShadow> softLift([Color color = AppColors.softShadow]) {
     return [
       BoxShadow(
-        color: color.withValues(alpha: 0.42),
-        blurRadius: 24,
-        spreadRadius: 1,
-      ),
-      BoxShadow(
-        color: color.withValues(alpha: 0.18),
-        blurRadius: 48,
-        spreadRadius: 3,
+        color: color,
+        blurRadius: 18,
+        spreadRadius: -8,
+        offset: Offset(0, 12),
       ),
     ];
   }
 
   static const List<BoxShadow> cardGlow = [
     BoxShadow(
-      color: AppColors.cyanGlowShadow,
-      blurRadius: 28,
-      spreadRadius: 1,
-      offset: Offset(0, 10),
+      color: AppColors.softShadow,
+      blurRadius: 18,
+      spreadRadius: -8,
+      offset: Offset(0, 12),
     ),
   ];
 }
@@ -160,7 +152,7 @@ class AppTextStyles {
   );
 
   static const TextStyle button = TextStyle(
-    color: AppColors.textPrimary,
+    color: AppColors.surface,
     fontSize: 16,
     fontWeight: FontWeight.w800,
     letterSpacing: 0,
@@ -190,14 +182,14 @@ class AppTextStyles {
 class AppTheme {
   const AppTheme._();
 
-  static ThemeData get darkTheme {
+  static ThemeData get cleanTheme {
     return ThemeData(
       colorScheme: ColorScheme.fromSeed(
         seedColor: AppColors.primaryPurple,
-        brightness: Brightness.dark,
+        brightness: Brightness.light,
         surface: AppColors.surface,
         primary: AppColors.primaryPurple,
-        secondary: AppColors.cyanAccent,
+        secondary: AppColors.pinkAccent,
         error: AppColors.danger,
       ),
       scaffoldBackgroundColor: AppColors.background,
@@ -223,4 +215,6 @@ class AppTheme {
       useMaterial3: true,
     );
   }
+
+  static ThemeData get darkTheme => cleanTheme;
 }

@@ -101,13 +101,13 @@ abstract class AppLocalizations {
   /// No description provided for @appTitle.
   ///
   /// In en, this message translates to:
-  /// **'Eye Lock Challenge'**
+  /// **'StareDown Challenge'**
   String get appTitle;
 
   /// No description provided for @appSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Gaze Focus Challenge'**
+  /// **'StareDown Challenge'**
   String get appSubtitle;
 
   /// No description provided for @keepEyesLocked.
@@ -137,7 +137,7 @@ abstract class AppLocalizations {
   /// No description provided for @modeSelectionHeroTitleTop.
   ///
   /// In en, this message translates to:
-  /// **'EYE LOCK'**
+  /// **'STAREDOWN'**
   String get modeSelectionHeroTitleTop;
 
   /// No description provided for @modeSelectionHeroTitleBottom.
@@ -149,7 +149,7 @@ abstract class AppLocalizations {
   /// No description provided for @modeSelectionSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Gaze Focus Challenge'**
+  /// **'StareDown Challenge'**
   String get modeSelectionSubtitle;
 
   /// No description provided for @modeSelectionRule.
@@ -353,7 +353,7 @@ abstract class AppLocalizations {
   /// No description provided for @cameraDeniedMessage.
   ///
   /// In en, this message translates to:
-  /// **'Camera permission is required to play the gaze challenge.'**
+  /// **'Camera permission is required to play StareDown Challenge.'**
   String get cameraDeniedMessage;
 
   /// No description provided for @cameraPermanentlyDeniedMessage.
@@ -503,7 +503,7 @@ abstract class AppLocalizations {
   /// No description provided for @rankEyeLockMaster.
   ///
   /// In en, this message translates to:
-  /// **'Eye Lock Master'**
+  /// **'StareDown Master'**
   String get rankEyeLockMaster;
 
   /// No description provided for @newRecord.

@@ -1,6 +1,6 @@
-# Eye Lock Challenge
+# StareDown Challenge
 
-Eye Lock Challenge is a Flutter cross-platform mobile game for Android and iOS.
+StareDown Challenge is a Flutter cross-platform mobile game for Android and iOS.
 The player chooses a mode, focuses on the highlighted eye area, and tries to
 maintain eye contact as long as possible.
 
@@ -60,6 +60,38 @@ lib/
    - The debug camera preview appears.
    - MediaPipe gaze tracking ends the game after sustained gaze failure.
    - The result screen shows the final time.
+
+## Android Release Build
+
+The Android application ID is `io.github.dongdongju96.staredownchallenge`.
+
+1. Generate a private upload keystore:
+
+   ```bash
+   keytool -genkey -v -keystore android/upload-keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+   ```
+
+2. Create the local signing config:
+
+   ```bash
+   cp android/key.properties.example android/key.properties
+   ```
+
+3. Edit `android/key.properties` with the keystore password, key password, key
+   alias, and keystore path. Do not commit `android/key.properties` or the
+   keystore file.
+
+4. Build the signed release app bundle:
+
+   ```bash
+   flutter build appbundle --release
+   ```
+
+   For an APK instead, run:
+
+   ```bash
+   flutter build apk --release
+   ```
 
 ## Notes
 

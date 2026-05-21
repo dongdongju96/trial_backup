@@ -9,10 +9,10 @@ class AppLocalizationsKo extends AppLocalizations {
   AppLocalizationsKo([String locale = 'ko']) : super(locale);
 
   @override
-  String get appTitle => '아이 락 챌린지';
+  String get appTitle => '눈싸움 챌린지';
 
   @override
-  String get appSubtitle => '시선 고정 챌린지';
+  String get appSubtitle => '눈싸움 챌린지';
 
   @override
   String get keepEyesLocked => '목표 지점에 시선을 고정하세요.';
@@ -27,13 +27,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get splashTagline => '집중하고, 버티고, 기록을 깨보세요.';
 
   @override
-  String get modeSelectionHeroTitleTop => 'EYE LOCK';
+  String get modeSelectionHeroTitleTop => '눈싸움';
 
   @override
-  String get modeSelectionHeroTitleBottom => 'CHALLENGE';
+  String get modeSelectionHeroTitleBottom => '챌린지';
 
   @override
-  String get modeSelectionSubtitle => '시선 고정 챌린지';
+  String get modeSelectionSubtitle => '눈싸움 챌린지';
 
   @override
   String get modeSelectionRule => '목표 지점에 시선을 고정하세요.';
@@ -136,7 +136,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get openSettings => '설정 열기';
 
   @override
-  String get cameraDeniedMessage => '시선 챌린지를 플레이하려면 카메라 권한이 필요합니다.';
+  String get cameraDeniedMessage => '눈싸움 챌린지를 플레이하려면 카메라 권한이 필요합니다.';
 
   @override
   String get cameraPermanentlyDeniedMessage =>
@@ -216,7 +216,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get rankSteelEyes => '강철의 시선';
 
   @override
-  String get rankEyeLockMaster => '아이락 마스터';
+  String get rankEyeLockMaster => '눈싸움 마스터';
 
   @override
   String get newRecord => 'NEW RECORD!';

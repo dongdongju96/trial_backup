@@ -17,7 +17,7 @@ class PrivacyCheckItem extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, color: AppColors.success, size: 22),
+        Icon(icon, color: AppColors.primaryPurple, size: 22),
         const SizedBox(width: AppSpacing.sm),
         Expanded(child: Text(text, style: AppTextStyles.smallBody)),
       ],

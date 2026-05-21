@@ -1,4 +1,4 @@
-package com.example.eye_lock_challenge
+package io.github.dongdongju96.staredownchallenge
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -15,6 +15,10 @@ import io.flutter.plugin.common.MethodChannel
 import java.nio.ByteBuffer
 import java.util.concurrent.Executors
 
+private const val FACE_LANDMARKER_CHANNEL = "eye_lock_challenge/face_landmarker"
+private const val MAX_FRAME_PIXELS = 1920 * 1080
+private const val SUPPORTED_ANDROID_FORMAT = "yuv420"
+
 class MainActivity : FlutterActivity() {
     private lateinit var bridge: FaceLandmarkerBridge
 
@@ -23,7 +27,7 @@ class MainActivity : FlutterActivity() {
         bridge = FaceLandmarkerBridge(this)
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
-            "eye_lock_challenge/face_landmarker"
+            FACE_LANDMARKER_CHANNEL
         ).setMethodCallHandler { call, result ->
             when (call.method) {
                 "initialize" -> bridge.initialize(call.arguments, result)
@@ -43,7 +47,7 @@ private class FaceLandmarkerBridge(private val context: Context) {
     fun initialize(arguments: Any?, result: MethodChannel.Result) {
         executor.execute {
             try {
-                val args = arguments as? Map<*, *> ?: error("Missing initialize arguments.")
+                val args = mapArg(arguments, "initialize arguments")
                 val modelBytes = args["modelBytes"] as? ByteArray
                     ?: error("Missing face_landmarker.task bytes.")
                 val modelBuffer = ByteBuffer.allocateDirect(modelBytes.size)
@@ -79,7 +83,7 @@ private class FaceLandmarkerBridge(private val context: Context) {
         executor.execute {
             try {
                 val landmarker = faceLandmarker ?: error("Face Landmarker is not initialized.")
-                val args = arguments as? Map<*, *> ?: error("Missing frame arguments.")
+                val args = mapArg(arguments, "frame arguments")
                 val bitmap = bitmapFromFrame(args)
                 val rotatedBitmap = rotateBitmap(bitmap, intArg(args, "sensorOrientation", 0))
                 val mpImage = BitmapImageBuilder(rotatedBitmap).build()
@@ -104,20 +108,22 @@ private class FaceLandmarkerBridge(private val context: Context) {
 
     private fun bitmapFromFrame(args: Map<*, *>): Bitmap {
         val format = args["format"] as? String ?: "unknown"
-        if (format != "yuv420") {
+        if (format != SUPPORTED_ANDROID_FORMAT) {
             error("Unsupported Android camera format: $format")
         }
 
         val width = intArg(args, "width", 0)
         val height = intArg(args, "height", 0)
+        requireValidDimensions(width, height)
+
         val planes = args["planes"] as? List<*> ?: error("Missing image planes.")
         if (planes.size < 3) {
             error("YUV420 image requires 3 planes.")
         }
 
-        val yPlane = planes[0] as? Map<*, *> ?: error("Missing Y plane.")
-        val uPlane = planes[1] as? Map<*, *> ?: error("Missing U plane.")
-        val vPlane = planes[2] as? Map<*, *> ?: error("Missing V plane.")
+        val yPlane = mapArg(planes[0], "Y plane")
+        val uPlane = mapArg(planes[1], "U plane")
+        val vPlane = mapArg(planes[2], "V plane")
         val yBytes = yPlane["bytes"] as? ByteArray ?: error("Missing Y bytes.")
         val uBytes = uPlane["bytes"] as? ByteArray ?: error("Missing U bytes.")
         val vBytes = vPlane["bytes"] as? ByteArray ?: error("Missing V bytes.")
@@ -126,6 +132,31 @@ private class FaceLandmarkerBridge(private val context: Context) {
         val vRowStride = intArg(vPlane, "bytesPerRow", width / 2)
         val uPixelStride = intArg(uPlane, "bytesPerPixel", 1)
         val vPixelStride = intArg(vPlane, "bytesPerPixel", 1)
+        requireValidPlane(
+            bytes = yBytes,
+            rowStride = yRowStride,
+            pixelStride = 1,
+            width = width,
+            height = height,
+            planeName = "Y",
+        )
+        requireValidPlane(
+            bytes = uBytes,
+            rowStride = uRowStride,
+            pixelStride = uPixelStride,
+            width = (width + 1) / 2,
+            height = (height + 1) / 2,
+            planeName = "U",
+        )
+        requireValidPlane(
+            bytes = vBytes,
+            rowStride = vRowStride,
+            pixelStride = vPixelStride,
+            width = (width + 1) / 2,
+            height = (height + 1) / 2,
+            planeName = "V",
+        )
+
         val pixels = IntArray(width * height)
 
         for (y in 0 until height) {
@@ -141,6 +172,35 @@ private class FaceLandmarkerBridge(private val context: Context) {
         }
 
         return Bitmap.createBitmap(pixels, width, height, Bitmap.Config.ARGB_8888)
+    }
+
+    private fun requireValidDimensions(width: Int, height: Int) {
+        if (width <= 0 || height <= 0) {
+            error("Invalid frame dimensions: ${width}x$height")
+        }
+        if (width.toLong() * height.toLong() > MAX_FRAME_PIXELS) {
+            error("Frame is too large for on-device gaze detection: ${width}x$height")
+        }
+    }
+
+    private fun requireValidPlane(
+        bytes: ByteArray,
+        rowStride: Int,
+        pixelStride: Int,
+        width: Int,
+        height: Int,
+        planeName: String,
+    ) {
+        if (rowStride <= 0 || pixelStride <= 0) {
+            error("$planeName plane has invalid stride metadata.")
+        }
+
+        val lastRowOffset = rowStride.toLong() * (height - 1)
+        val lastPixelOffset = pixelStride.toLong() * (width - 1)
+        val requiredBytes = lastRowOffset + lastPixelOffset + 1
+        if (requiredBytes > bytes.size) {
+            error("$planeName plane buffer is smaller than its stride metadata.")
+        }
     }
 
     private fun rotateBitmap(bitmap: Bitmap, rotationDegrees: Int): Bitmap {
@@ -208,6 +268,10 @@ private class FaceLandmarkerBridge(private val context: Context) {
 
     private fun point(x: Float, y: Float): Map<String, Float> {
         return mapOf("x" to x.coerceIn(0f, 1f), "y" to y.coerceIn(0f, 1f))
+    }
+
+    private fun mapArg(value: Any?, name: String): Map<*, *> {
+        return value as? Map<*, *> ?: error("Missing $name.")
     }
 
     private fun intArg(args: Map<*, *>, key: String, defaultValue: Int): Int {

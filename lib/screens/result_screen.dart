@@ -3,7 +3,7 @@ import 'package:eye_lock_challenge/l10n/app_localizations.dart';
 
 import '../models/game_result.dart';
 import '../utils/constants.dart';
-import '../widgets/neon_card.dart';
+import '../widgets/clean_card.dart';
 import '../widgets/primary_button.dart';
 import '../widgets/secondary_button.dart';
 import 'game_screen.dart';
@@ -32,34 +32,17 @@ class ResultScreen extends StatelessWidget {
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(AppSpacing.screenPadding),
-                    decoration: BoxDecoration(
-                      gradient: RadialGradient(
-                        center: Alignment.topCenter,
-                        radius: 1.2,
-                        colors: [
-                          AppColors.pinkAccent.withValues(alpha: 0.18),
-                          AppColors.background,
-                        ],
-                      ),
-                    ),
+                    color: AppColors.background,
                     child: Column(
                       children: [
                         const Spacer(),
-                        DecoratedBox(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            boxShadow: AppShadows.neonGlow(
-                              AppColors.pinkAccent,
-                            ),
-                          ),
-                          child: const CircleAvatar(
-                            radius: 42,
-                            backgroundColor: AppColors.surfaceLight,
-                            child: Icon(
-                              Icons.flash_on_rounded,
-                              size: 52,
-                              color: AppColors.pinkAccent,
-                            ),
+                        const CircleAvatar(
+                          radius: 42,
+                          backgroundColor: AppColors.surfaceLight,
+                          child: Icon(
+                            Icons.flash_on_rounded,
+                            size: 52,
+                            color: AppColors.pinkAccent,
                           ),
                         ),
                         const SizedBox(height: AppSpacing.lg),
@@ -68,12 +51,11 @@ class ResultScreen extends StatelessWidget {
                           textAlign: TextAlign.center,
                           style: AppTextStyles.resultTitle.copyWith(
                             color: AppColors.pinkAccent,
-                            shadows: AppShadows.neonGlow(AppColors.pinkAccent),
                           ),
                         ),
                         const SizedBox(height: AppSpacing.lg),
-                        NeonCard(
-                          glowColor: AppColors.primaryPurple,
+                        CleanCard(
+                          accentColor: AppColors.primaryPurple,
                           child: Column(
                             children: [
                               Text(

@@ -3,7 +3,7 @@ import 'package:eye_lock_challenge/l10n/app_localizations.dart';
 
 import '../models/game_mode.dart';
 import '../utils/constants.dart';
-import '../widgets/neon_card.dart';
+import '../widgets/clean_card.dart';
 import '../widgets/primary_button.dart';
 import 'language_selection_screen.dart';
 import 'permission_screen.dart';
@@ -28,36 +28,19 @@ class ModeSelectionScreen extends StatelessWidget {
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(AppSpacing.screenPadding),
-                    decoration: BoxDecoration(
-                      gradient: RadialGradient(
-                        center: Alignment.topCenter,
-                        radius: 1.1,
-                        colors: [
-                          AppColors.primaryPurple.withValues(alpha: 0.18),
-                          AppColors.background,
-                        ],
-                      ),
-                    ),
+                    color: AppColors.background,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         const Spacer(),
                         Center(
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              boxShadow: AppShadows.neonGlow(
-                                AppColors.cyanAccent,
-                              ),
-                            ),
-                            child: const CircleAvatar(
-                              radius: 38,
-                              backgroundColor: AppColors.surfaceLight,
-                              child: Icon(
-                                Icons.remove_red_eye_outlined,
-                                size: 44,
-                                color: AppColors.cyanAccent,
-                              ),
+                          child: CircleAvatar(
+                            radius: 38,
+                            backgroundColor: AppColors.surfaceLight,
+                            child: const Icon(
+                              Icons.remove_red_eye_outlined,
+                              size: 44,
+                              color: AppColors.primaryPurple,
                             ),
                           ),
                         ),
@@ -67,7 +50,6 @@ class ModeSelectionScreen extends StatelessWidget {
                           textAlign: TextAlign.center,
                           style: AppTextStyles.resultTitle.copyWith(
                             fontSize: 42,
-                            color: AppColors.textPrimary,
                           ),
                         ),
                         Text(
@@ -75,26 +57,24 @@ class ModeSelectionScreen extends StatelessWidget {
                           textAlign: TextAlign.center,
                           style: AppTextStyles.resultTitle.copyWith(
                             fontSize: 42,
-                            color: AppColors.cyanAccent,
+                            color: AppColors.primaryPurple,
                           ),
                         ),
                         const SizedBox(height: AppSpacing.sm),
                         Text(
                           localizations.modeSelectionSubtitle,
                           textAlign: TextAlign.center,
-                          style: AppTextStyles.body.copyWith(
-                            color: AppColors.pinkAccent,
-                          ),
+                          style: AppTextStyles.body,
                         ),
                         const SizedBox(height: AppSpacing.xl),
-                        NeonCard(
-                          glowColor: AppColors.primaryBlue,
+                        CleanCard(
+                          accentColor: AppColors.primaryBlue,
                           padding: const EdgeInsets.all(AppSpacing.md),
                           child: Row(
                             children: [
                               const Icon(
                                 Icons.center_focus_strong_outlined,
-                                color: AppColors.cyanAccent,
+                                color: AppColors.primaryPurple,
                               ),
                               const SizedBox(width: AppSpacing.sm),
                               Expanded(
@@ -185,7 +165,7 @@ class _UtilityIcon extends StatelessWidget {
             color: AppColors.surface,
             shape: BoxShape.circle,
             border: Border.all(
-              color: AppColors.cyanAccent.withValues(alpha: 0.32),
+              color: AppColors.primaryPurple.withValues(alpha: 0.32),
             ),
           ),
           child: Padding(

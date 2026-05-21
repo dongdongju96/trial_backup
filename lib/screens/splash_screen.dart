@@ -47,7 +47,7 @@ class _SplashScreenState extends State<SplashScreen> {
             const Icon(
               Icons.remove_red_eye_outlined,
               size: 76,
-              color: AppColors.cyanAccent,
+              color: AppColors.primaryPurple,
             ),
             const SizedBox(height: AppSpacing.lg),
             Text(

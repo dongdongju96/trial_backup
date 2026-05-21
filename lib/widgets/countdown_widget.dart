@@ -69,10 +69,9 @@ class _CountdownWidgetState extends State<CountdownWidget> {
           },
           child: DecoratedBox(
             decoration: BoxDecoration(
-              gradient: AppGradients.surface,
+              color: AppColors.surface,
               shape: BoxShape.circle,
               border: Border.all(color: AppColors.pinkAccent, width: 2),
-              boxShadow: AppShadows.neonGlow(AppColors.pinkAccent),
             ),
             child: SizedBox(
               width: 148,

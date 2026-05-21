@@ -20,7 +20,7 @@ void main() {
       ),
     );
 
-    expect(find.text('Eye Lock Challenge'), findsOneWidget);
+    expect(find.text('StareDown Challenge'), findsOneWidget);
     expect(find.byIcon(Icons.remove_red_eye_outlined), findsOneWidget);
   });
 }
