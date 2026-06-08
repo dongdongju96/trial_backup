@@ -63,7 +63,7 @@ lib/
 
 ## Android Release Build
 
-The Android application ID is `io.github.dongdongju96.staredownchallenge`.
+The Android application ID is `com.dawnoberman`.
 
 1. Generate a private upload keystore:
 

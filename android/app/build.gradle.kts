@@ -39,7 +39,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "io.github.dongdongju96.staredownchallenge"
+        applicationId = "com.dawnoberman"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 24
